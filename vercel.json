@@ -1,1 +1,49 @@
-{"version":2,"functions":{"api/*.js":{"maxDuration":60}},"headers":[{"source":"/(.*)","headers":[{"key":"X-Content-Type-Options","value":"nosniff"},{"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"},{"key":"Permissions-Policy","value":"microphone=(self),camera=()"},{"key":"X-Frame-Options","value":"DENY"}]}]}
+{
+  "version": 2,
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 60
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "microphone=(self),camera=()"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/aura",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/aura/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/workspace",
+      "destination": "/workspace/index.html"
+    },
+    {
+      "source": "/workspace/",
+      "destination": "/workspace/index.html"
+    }
+  ]
+}
