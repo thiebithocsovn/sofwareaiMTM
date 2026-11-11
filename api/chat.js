@@ -28,7 +28,8 @@ export default async function handler(req,res){
   }catch(error){
     const status=Number(error?.statusCode||error?.status||error?.response?.status||0);
     const code=String(error?.name||'GatewayError');
-    console.error('AURA AI Gateway request failed',status,code);
+    const upstream=(()=>{try{const body=JSON.parse(String(error?.responseBody||error?.cause?.responseBody||'{}'));return {type:String(body?.error?.type||'').slice(0,60),code:String(body?.error?.code||'').slice(0,60),message:String(body?.error?.message||'').slice(0,100)}}catch{return {type:'unparsed'}}})();
+    console.error('AURA AI Gateway request failed',status,code,JSON.stringify(upstream));
     if(status===429)return res.status(429).json({error:'Dịch vụ AI đang giới hạn lượt gọi. Vui lòng thử lại.'});
     if(status===401||status===403)return res.status(503).json({error:'AI Gateway chưa cấp quyền cho dự án. Hãy kiểm tra OIDC trong Vercel → Settings → Security.'});
     if(status===402)return res.status(503).json({error:'AI Gateway chưa có ngân sách hoặc hạn mức sử dụng.'});
