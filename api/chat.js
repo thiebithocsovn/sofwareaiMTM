@@ -31,7 +31,8 @@ export default async function handler(req,res){
     const upstream=(()=>{try{const body=JSON.parse(String(error?.responseBody||error?.cause?.responseBody||'{}'));return {type:String(body?.error?.type||'').slice(0,60),code:String(body?.error?.code||'').slice(0,60),message:String(body?.error?.message||'').slice(0,100)}}catch{return {type:'unparsed'}}})();
     console.error('AURA AI Gateway request failed',status,code,JSON.stringify(upstream));
     if(status===429)return res.status(429).json({error:'Dịch vụ AI đang giới hạn lượt gọi. Vui lòng thử lại.'});
-    if(status===401||status===403)return res.status(503).json({error:'AI Gateway chưa cấp quyền cho dự án. Hãy kiểm tra OIDC trong Vercel → Settings → Security.'});
+    if(status===403&&upstream.type==='customer_verification_required')return res.status(503).json({error:'AI Gateway yêu cầu xác minh tài khoản Vercel bằng thẻ thanh toán hợp lệ. Vào Vercel → Settings → Billing để thêm hoặc xác minh phương thức thanh toán, sau đó thử lại AURA.'});
+    if(status===401||status===403)return res.status(503).json({error:'AI Gateway từ chối yêu cầu. Vui lòng kiểm tra khóa API, quyền truy cập hoặc mục Logs trên Vercel.'});
     if(status===402)return res.status(503).json({error:'AI Gateway chưa có ngân sách hoặc hạn mức sử dụng.'});
     if(code.includes('Abort')||code.includes('Timeout'))return res.status(504).json({error:'AI phản hồi quá thời gian.'});
     return res.status(502).json({error:'AI Gateway chưa trả lời được. Vui lòng kiểm tra Logs và ngân sách của dự án Vercel.'});
