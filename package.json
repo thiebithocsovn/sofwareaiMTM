@@ -1,1 +1,12 @@
-{"name":"software-ai-mtm","private":true,"version":"1.0.0","type":"module"}
+{
+  "name": "software-ai-mtm",
+  "private": true,
+  "version": "1.0.1",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "ai": "7.0.166"
+  }
+}
